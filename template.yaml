@@ -1,0 +1,47 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  aws-schema-discovery-sns
+
+  Sample SAM Template for aws-schema-discovery-sns
+
+Globals:
+  Function:
+    Timeout: 60
+
+Resources:
+  SnsDiscoveryTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: 'sns-discovery'
+
+  SnsSchemaDiscoveryFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: app/
+      Handler: app.lambdaHandler
+      Runtime: nodejs12.x
+      Environment:
+        Variables:
+          event_source: sns.topic
+          event_detail_type: !GetAtt SnsDiscoveryTopic.TopicName
+      Events:
+        SnsEvents:
+          Type: SNS
+          Properties:
+            Topic: !Ref SnsDiscoveryTopic
+      Policies:
+        - Statement:
+            - Sid: EventBridgePutEventsPolicy
+              Effect: Allow
+              Action:
+                - events:PutEvents
+              Resource: '*'
+
+Outputs:
+  SnsSchemaDiscoveryFunction:
+    Description: 'SNS Schema Discovery function Lambda Function ARN'
+    Value: !GetAtt SnsSchemaDiscoveryFunction.Arn
+  SnsSchemaDiscoveryFunctionIamRole:
+    Description: 'Implicit IAM Role created for SNS Schema Discovery function'
+    Value: !GetAtt SnsSchemaDiscoveryFunctionRole.Arn

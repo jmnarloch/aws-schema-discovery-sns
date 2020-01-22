@@ -1,0 +1,13 @@
+{
+  "name": "aws-schema-discovery-sns",
+  "version": "1.0.0",
+  "description": "SNS topic schema discovery",
+  "main": "app.js",
+  "repository": "https://github.com/jmnarloch",
+  "author": "Jakub Narloch",
+  "license": "Apache 2.0",
+  "dependencies": {
+    "aws-sdk": "^2.0.9"
+  },
+  "devDependencies": {}
+}
